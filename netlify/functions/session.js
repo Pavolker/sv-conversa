@@ -22,7 +22,7 @@ exports.handler = async (event, context) => {
         },
         messages: {
           include: { user: true },
-          orderBy: { createdAt: 'asc' }
+          orderBy: { createdAt: 'desc' }
         },
         comments: {
           include: { user: true },
