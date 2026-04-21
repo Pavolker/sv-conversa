@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Autores — Sinapses dos Ventos</title>
+<meta name="viewport" content="width=device-width" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,600;75..125,700;75..125,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0A0E1A;
+  --muted: #6B6E78;
+  --paper: #ECEAE6;
+  --paper-2: #E4E1DB;
+  --blue: #0051FF;
+  --line: rgba(10,14,26,.12);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.brand { display: flex; align-items: baseline; gap: 14px; }
+.brand-mark {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--blue);
+}
+.brand-sub {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.nav { display: flex; gap: 28px; }
+.nav a {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink);
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+}
+.nav a:hover, .nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+.main { max-width: 900px; margin: 0 auto; padding: 60px 24px; }
+h1 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.subtitle { color: var(--muted); margin-bottom: 48px; }
+
+.authors-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 700px) {
+  .authors-grid { grid-template-columns: 1fr; }
+}
+
+.author-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.06);
+}
+.author-portrait {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 20px;
+}
+.author-name {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.author-location {
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--blue);
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+.author-bio {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--muted);
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <a href="/" class="brand-mark">SINAPSES DOS VENTOS</a>
+    <div class="brand-sub">Plataforma de diálogo filosófico</div>
+  </div>
+  <nav class="nav">
+    <a href="/">Ao vivo</a>
+    <a href="/arquivo.html">Arquivo</a>
+    <a class="active">Autores</a>
+    <a href="/sobre.html">Sobre</a>
+  </nav>
+</header>
+
+<main class="main">
+  <h1>Autores</h1>
+  <p class="subtitle">Os pensadores deste encontro</p>
+  
+  <div class="authors-grid">
+    <div class="author-card">
+      <img class="author-portrait" src="/images/angelica.jpg" alt="Angélica Sátiro">
+      <div class="author-name">Angélica Sátiro</div>
+      <div class="author-location">Filósofa · Barcelona</div>
+      <p class="author-bio">Doutora em Filosofia pela Universidade Autônoma de Barcelona. Fundadora do projeto Crearmundos. Autora de livros sobre pensamento criativo, filosofia para crianças e processos de transformação pela linguagem.</p>
+    </div>
+    
+    <div class="author-card">
+      <img class="author-portrait" src="/images/paulo.png" alt="Paulo Volker">
+      <div class="author-name">Paulo Volker</div>
+      <div class="author-location">Filósofo · Brasília</div>
+      <p class="author-bio">Filósofo e ensaísta. Professor convidado em programas de pós-graduação no Brasil e na Europa. Pesquisa a relação entre silêncio, tempo e linguagem no pensamento contemporâneo. Vive em Brasília desde 2008.</p>
+    </div>
+  </div>
+</main>
+</body>
+</html>

@@ -530,6 +530,8 @@ async function init() {
       const text = link.textContent.trim();
       if (text === 'Arquivo') {
         window.location.href = '/arquivo.html';
+      } else if (text === 'Autores') {
+        window.location.href = '/autores.html';
       } else if (text === 'Sobre') {
         window.location.href = '/sobre.html';
       }
