@@ -7,8 +7,12 @@ let reactions = {};
 
 async function loadSession() {
   try {
+    console.log('Carregando sessão...');
     const res = await fetch(`${API_URL}/session`);
+    console.log('Response status:', res.status);
+    if (!res.ok) throw new Error('API error');
     const session = await res.json();
+    console.log('Session loaded:', session?.title);
     
     const date = new Date(session.date);
     const day = date.getDate();
@@ -43,6 +47,7 @@ async function loadSession() {
         side: a.side
       }))
     };
+    console.log('SV_DATA loaded, messages:', SV_DATA.messages.length);
   } catch (e) {
     console.error('Erro ao carregar sessão:', e);
     SV_DATA = getDefaultData();
@@ -454,8 +459,15 @@ async function init() {
   const root = $('#root');
   if (!root) return;
 
+  root.innerHTML = '<div style="padding:40px;text-align:center;color:#666">Carregando...</div>';
+
   if (!SV_DATA) {
     await loadSession();
+  }
+
+  if (!SV_DATA || !SV_DATA.messages) {
+    root.innerHTML = '<div style="padding:40px;text-align:center;color:red">Erro ao carregar dados</div>';
+    return;
   }
 
   const isMobile = window.innerWidth < 800;
