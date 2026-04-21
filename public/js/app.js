@@ -522,6 +522,19 @@ async function init() {
   }
   
   attachEventListeners();
+  
+  // Navegação do menu
+  $$('.nav a').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const text = link.textContent.trim();
+      if (text === 'Arquivo') {
+        window.location.href = '/arquivo.html';
+      } else if (text === 'Sobre') {
+        window.location.href = '/sobre.html';
+      }
+    });
+  });
 }
 
 document.addEventListener('DOMContentLoaded', init);

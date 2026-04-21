@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Arquivo — Sinapses dos Ventos</title>
+<meta name="viewport" content="width=device-width" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,600;75..125,700;75..125,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0A0E1A;
+  --ink-2: #2A2F3D;
+  --muted: #6B6E78;
+  --paper: #ECEAE6;
+  --paper-2: #E4E1DB;
+  --blue: #0051FF;
+  --blue-deep: #0039B8;
+  --line: rgba(10,14,26,.12);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.brand { display: flex; align-items: baseline; gap: 14px; }
+.brand-mark {
+  font-family: 'Archivo', sans-serif;
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: 0.01em;
+  color: var(--blue);
+  line-height: 1;
+}
+.brand-sub {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+.nav { display: flex; gap: 28px; align-items: center; }
+.nav a {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  transition: .15s;
+}
+.nav a:hover, .nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+
+.main { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
+.title {
+  font-family: 'Archivo', sans-serif;
+  font-stretch: 75%;
+  font-weight: 800;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+.subtitle { color: var(--muted); margin-bottom: 48px; }
+
+.sessions-list { display: flex; flex-direction: column; gap: 24px; }
+.session-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 4px 24px rgba(0,0,0,.06);
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.session-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(0,0,0,.1);
+}
+.session-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; }
+.session-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.session-date {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--muted);
+}
+.session-title {
+  font-family: 'Archivo', sans-serif;
+  font-stretch: 75%;
+  font-weight: 700;
+  font-size: 20px;
+  margin-bottom: 12px;
+}
+.session-authors {
+  display: flex;
+  gap: 16px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.session-authors span { color: var(--blue); font-weight: 500; }
+
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--blue);
+  font-weight: 600;
+  padding: 4px 10px;
+  background: rgba(0,81,255,.08);
+  border-radius: 4px;
+}
+.live-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--blue);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0,81,255,.5); }
+  70% { box-shadow: 0 0 0 6px rgba(0,81,255,0); }
+  100% { box-shadow: 0 0 0 0 rgba(0,81,255,0); }
+}
+
+.loading { text-align: center; padding: 60px; color: var(--muted); }
+.empty { text-align: center; padding: 60px; color: var(--muted); }
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--blue);
+  text-decoration: none;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+.back-link:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <a href="/" class="brand-mark">SINAPSES DOS VENTOS</a>
+    <div class="brand-sub">Plataforma de diálogo filosófico</div>
+  </div>
+  <nav class="nav">
+    <a href="/">Ao vivo</a>
+    <a class="active">Arquivo</a>
+    <a href="/sobre.html">Sobre</a>
+  </nav>
+</header>
+
+<main class="main">
+  <h1 class="title">Arquivo</h1>
+  <p class="subtitle">Todas as conversas filosóficas</p>
+  
+  <div id="content">
+    <div class="loading">Carregando...</div>
+  </div>
+</main>
+
+<script>
+const API_URL = '/.netlify/functions';
+
+async function loadSessions() {
+  const content = document.getElementById('content');
+  
+  try {
+    const res = await fetch(`${API_URL}/sessions`);
+    const sessions = await res.json();
+    
+    if (!sessions || sessions.length === 0) {
+      content.innerHTML = '<div class="empty">Nenhuma sessão no arquivo ainda.</div>';
+      return;
+    }
+    
+    const formatDate = (dateStr) => {
+      const d = new Date(dateStr);
+      return `${String(d.getDate()).padStart(2,'0')} · ${['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'][d.getMonth()]} · ${d.getFullYear()}`;
+    };
+    
+    content.innerHTML = `
+      <div class="sessions-list">
+        ${sessions.map(s => `
+          <a href="/?session=${s.id}" class="session-card">
+            <div class="session-header">
+              <span class="session-number">${s.number}</span>
+              <span class="session-date">${formatDate(s.date)}</span>
+            </div>
+            <div class="session-title">${s.title}</div>
+            <div class="session-authors">
+              ${s.authors.map(a => `<span>${a.name}</span>`).join(' · ')}
+            </div>
+            ${s.isLive ? '<div class="live-badge" style="margin-top:12px"><span class="live-dot"></span> Ao vivo</div>' : ''}
+          </a>
+        `).join('')}
+      </div>
+    `;
+  } catch (e) {
+    content.innerHTML = '<div class="empty">Erro ao carregar sessões.</div>';
+  }
+}
+
+loadSessions();
+</script>
+</body>
+</html>
