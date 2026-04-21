@@ -10,9 +10,12 @@
 <style>
 :root {
   --ink: #0A0E1A;
+  --ink-2: #2A2F3D;
   --muted: #6B6E78;
   --paper: #ECEAE6;
+  --paper-2: #E4E1DB;
   --blue: #0051FF;
+  --blue-ink: #001A66;
   --line: rgba(10,14,26,.12);
 }
 * { box-sizing: border-box; }
@@ -51,20 +54,109 @@ body {
   font-size: 12px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ink);
+  color: var(--ink-2);
   text-decoration: none;
   font-weight: 500;
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
 }
-.nav a:hover, .nav a.active { color: var(--blue); }
+.nav a:hover, .nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
 
-.main { max-width: 700px; margin: 0 auto; padding: 60px 24px; }
+.main { max-width: 720px; margin: 0 auto; padding: 60px 24px 100px; }
+
 h1 {
   font-family: 'Archivo', sans-serif;
   font-weight: 800;
   font-size: 36px;
-  margin-bottom: 24px;
+  margin-bottom: 8px;
 }
-p { font-size: 16px; line-height: 1.7; color: var(--muted); }
+h2 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  margin: 48px 0 20px;
+}
+h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  margin: 32px 0 12px;
+}
+p { font-size: 16px; line-height: 1.75; color: var(--ink-2); margin: 0 0 16px; }
+
+.lead { font-size: 18px; color: var(--ink); }
+
+blockquote {
+  margin: 32px 0;
+  padding: 20px 24px;
+  border-left: 3px solid var(--blue);
+  background: rgba(0,81,255,.03);
+  font-family: 'Archivo', sans-serif;
+  font-size: 18px;
+  line-height: 1.5;
+  color: var(--blue-ink);
+}
+
+.section { margin: 48px 0; }
+
+.section-title {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--blue);
+  font-weight: 600;
+  margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.vertentes { display: flex; flex-direction: column; gap: 20px; }
+.vertente {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.04);
+}
+.vertente h3 { margin-top: 0; }
+.vertente p { margin-bottom: 0; }
+
+.principios { display: flex; flex-wrap: wrap; gap: 12px; }
+.principio {
+  display: inline-block;
+  padding: 10px 16px;
+  background: rgba(0,81,255,.06);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--blue);
+}
+
+.autores { display: flex; gap: 32px; margin-top: 48px; }
+.autor { flex: 1; }
+.autor-name {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.autor-role {
+  font-size: 12px;
+  color: var(--blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.epigrafe {
+  margin-top: 60px;
+  padding-top: 32px;
+  border-top: 1px solid var(--line);
+  font-family: 'Archivo', sans-serif;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--muted);
+  text-align: center;
+}
 </style>
 </head>
 <body>
@@ -76,17 +168,85 @@ p { font-size: 16px; line-height: 1.7; color: var(--muted); }
   <nav class="nav">
     <a href="/">Ao vivo</a>
     <a href="/arquivo.html">Arquivo</a>
+    <a href="/autores.html">Autores</a>
     <a class="active">Sobre</a>
   </nav>
 </header>
 
 <main class="main">
   <h1>Sobre o Projeto</h1>
-  <p>Sinapses dos Ventos é uma plataforma de diálogo filosófico que conecta pensadores de diferentes lugares do mundo em conversas ao vivo sobre temas que importam.</p>
-  <br>
-  <p>O nome vem da ideia de que o pensamento não acontece nos neurônios, mas no espaço entre eles — a sinapse. Assim como o vento atravessa os intervalos entre as coisas, o pensamento atravessa os espaços entre vozes que se escutam.</p>
-  <br>
-  <p>Um encontro contemplativo entre dois pensadores, onde o silêncio é tão importante quanto a palavra.</p>
+  <p class="lead">Sinapses dos Ventos é uma plataforma de diálogo filosófico que conecta pensadores de diferentes lugares do mundo em conversas ao vivo sobre temas que importam.</p>
+
+  <section class="section">
+    <div class="section-title">A Ideia</div>
+    <p>O nome vem da ideia de que o pensamento não acontece nos neurônios, mas no espaço entre eles — a sinapse. Assim como o vento atravessa os intervalos entre as coisas, o pensamento atravessa os espaços entre vozes que se escutam.</p>
+    <p>Um encontro contemplativo entre dois pensadores, onde o silêncio é tão importante quanto a palavra.</p>
+  </section>
+
+  <blockquote>
+    Como criar espaços onde o pensamento possa acontecer sem ser reduzido a conteúdo, sem virar produto, sem ser otimizado?
+  </blockquote>
+
+  <section class="section">
+    <div class="section-title">O Projeto Maior</div>
+    <p>Este projeto faz parte de uma investigação mais ampla sobre os modos de produção e circulação do pensamento filosófico contemporâneo.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Vertentes</div>
+    <div class="vertentes">
+      <div class="vertente">
+        <h3>1. Conversas ao vivo</h3>
+        <p>Encontros quinzenais entre dois pensadores. Sem platéia, sem moderação, sem pergunta do público. Apenas duas vozes e o intervalo entre elas.</p>
+      </div>
+      <div class="vertente">
+        <h3>2. Arquivo filosófico</h3>
+        <p>Registro textual das conversas, preservado na forma original, sem resumo, sem conclusão, sem "pontos principais".</p>
+      </div>
+      <div class="vertente">
+        <h3>3. Esta plataforma</h3>
+        <p>O espaço digital onde os encontros acontecem e o arquivo se deposita. Um lugar de escuta, não de consumo.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Princípios</div>
+    <div class="principios">
+      <span class="principio">Contenção</span>
+      <span class="principio">Presença</span>
+      <span class="principio">Escuta</span>
+      <span class="principio">Silêncio</span>
+      <span class="principio">Continuidade</span>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Os Encontros</div>
+    <p>Cada encontro é uma conversa de aproximadamente 90 minutos entre dois pensadores — pode ser filósofos, artistas, cientistas, ou qualquer pessoa disposta a pensar em voz alta.</p>
+    <p>Não há tema pré-definido. O tema emerge no encontro.</p>
+    <p>Não há roteiro. O silêncio faz parte da conversa.</p>
+    <p>Não há conclusão. O pensamento continua depois do fim.</p>
+  </section>
+
+  <section class="section">
+    <div class="section-title">Autores do Projeto</div>
+    <p>O projeto é uma criação conjunta, desenvolvido em parceria desde 2024.</p>
+    <div class="autores">
+      <div class="autor">
+        <div class="autor-name">Paulo Volker</div>
+        <div class="autor-role">Filósofo · Brasília</div>
+      </div>
+      <div class="autor">
+        <div class="autor-name">Angélica Sátiro</div>
+        <div class="autor-role">Filósofa · Barcelona</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="epigrafe">
+    "Cultivar as condições para que o pensamento chegue — o resto é vento."
+  </div>
 </main>
 </body>
 </html>
