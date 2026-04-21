@@ -1,0 +1,557 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Sinapses dos Ventos — Plataforma</title>
+<meta name="viewport" content="width=1440" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,600;75..125,700;75..125,800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0A0E1A; --ink-2: #2A2F3D; --muted: #6B6E78; --muted-2: #9A9B9E;
+  --paper: #ECEAE6; --paper-2: #E4E1DB; --paper-3: #DAD6CE;
+  --blue: #0051FF; --blue-deep: #0039B8; --blue-ink: #001A66;
+  --line: rgba(10,14,26,.12); --line-soft: rgba(10,14,26,.06);
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; height: 100%; overflow: hidden; }
+body {
+  font-family: 'Inter', -apple-system, sans-serif;
+  background: var(--paper); color: var(--ink);
+  -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+}
+#root { width: 100vw; height: 100vh; position: relative; }
+
+.shell { width: 100%; height: 100%; background: var(--paper); display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.topbar { display: flex; align-items: center; justify-content: space-between; padding: 18px 36px; border-bottom: 1px solid var(--line); background: var(--paper); position: relative; z-index: 5; }
+.brand { display: flex; align-items: baseline; gap: 14px; }
+.brand-mark { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 22px; letter-spacing: 0.01em; color: var(--blue); line-height: 1; }
+.brand-sub { font-size: 11px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.nav { display: flex; gap: 28px; align-items: center; }
+.nav a { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-2); text-decoration: none; font-weight: 500; cursor: pointer; padding: 6px 0; border-bottom: 1px solid transparent; transition: .15s; }
+.nav a:hover, .nav a.active { color: var(--blue); border-bottom-color: var(--blue); }
+.live-badge { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); font-weight: 600; padding: 6px 12px; background: rgba(0,81,255,.06); border: 1px solid rgba(0,81,255,.2); }
+.live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--blue); animation: pulse 2s infinite; }
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0,81,255,.5); } 70% { box-shadow: 0 0 0 8px rgba(0,81,255,0); } 100% { box-shadow: 0 0 0 0 rgba(0,81,255,0); } }
+
+.session-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 18px 36px; border-bottom: 1px solid var(--line-soft); background: var(--paper); }
+.session-left, .session-right { display: flex; gap: 24px; align-items: center; }
+.session-right { justify-content: flex-end; }
+.author-pill { display: flex; align-items: center; gap: 12px; }
+.author-mono { width: 44px; height: 44px; background: var(--paper-3); position: relative; overflow: hidden; }
+.author-mono::after { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, transparent 0 3px, rgba(10,14,26,.06) 3px 4px); }
+.author-name { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--blue); line-height: 1.1; }
+.author-loc { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); margin-top: 2px; }
+.session-meta { text-align: center; font-size: 10px; letter-spacing: 0.28em; text-transform: uppercase; color: var(--muted); }
+.session-title { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 20px; letter-spacing: -0.005em; color: var(--ink); margin-top: 4px; line-height: 1.1; }
+
+.main { flex: 1; display: grid; grid-template-columns: 1fr 360px; min-height: 0; position: relative; }
+.dialogue { position: relative; overflow-y: auto; padding: 40px 36px 80px; scrollbar-width: thin; }
+.dialogue::-webkit-scrollbar { width: 6px; } .dialogue::-webkit-scrollbar-thumb { background: var(--line); }
+.spine { position: absolute; top: 0; bottom: 0; left: 50%; transform: translateX(-50%); width: 120px; pointer-events: none; z-index: 0; }
+
+.row { display: grid; grid-template-columns: 1fr 120px 1fr; margin-bottom: 48px; position: relative; z-index: 1; }
+.msg { position: relative; padding: 4px 0; }
+.msg-meta { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+.msg-author { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--blue); }
+.msg-time { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.1em; color: var(--muted); }
+.msg-body { font-size: 15.5px; line-height: 1.65; color: var(--ink-2); text-wrap: pretty; }
+.msg.right { text-align: right; }
+.msg.right .msg-meta { justify-content: flex-end; }
+.msg .quote { margin: 14px 0 6px; padding: 14px 18px; border-left: 2px solid var(--blue); background: rgba(0,81,255,.03); font-family: 'Archivo', sans-serif; font-stretch: 85%; font-weight: 500; font-size: 17px; line-height: 1.4; color: var(--blue-ink); letter-spacing: -0.005em; }
+.msg.right .quote { border-left: none; border-right: 2px solid var(--blue); text-align: right; }
+.msg-reactions { display: flex; gap: 14px; margin-top: 12px; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.msg.right .msg-reactions { justify-content: flex-end; }
+.reaction { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; transition: color .15s; }
+.reaction:hover, .reaction.active { color: var(--blue); }
+.reaction-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0; }
+
+.connector { position: relative; display: flex; align-items: flex-start; justify-content: center; padding-top: 18px; }
+.connector .node { width: 9px; height: 9px; border-radius: 50%; background: var(--paper); border: 1.5px solid var(--blue); position: relative; z-index: 2; }
+.connector .node.filled { background: var(--blue); }
+
+.btn { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; padding: 12px 20px; border: none; cursor: pointer; transition: .15s; }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: var(--blue-deep); }
+.btn-ghost { background: transparent; color: var(--ink-2); border: 1px solid var(--line); }
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+
+.comments { border-left: 1px solid var(--line); background: var(--paper-2); display: flex; flex-direction: column; min-height: 0; position: relative; overflow: hidden; }
+.comments-head { padding: 20px 22px 16px; border-bottom: 1px solid var(--line-soft); display: flex; justify-content: space-between; align-items: baseline; }
+.comments-title { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; font-size: 12px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink); }
+.comments-count { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; }
+.comments-list { flex: 1; overflow-y: auto; padding: 8px 22px 160px; }
+.comments-list::-webkit-scrollbar { width: 4px; } .comments-list::-webkit-scrollbar-thumb { background: var(--line); }
+.comment { padding: 16px 0; border-bottom: 1px dashed var(--line-soft); }
+.comment:last-child { border-bottom: none; }
+.comment-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.comment-avatar { width: 22px; height: 22px; background: var(--paper-3); font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; font-size: 10px; color: var(--ink); display: flex; align-items: center; justify-content: center; }
+.comment-name { font-size: 12px; font-weight: 600; color: var(--ink); }
+.comment-meta { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--muted); margin-left: auto; }
+.comment-body { font-size: 13px; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }
+.comment-ref { margin-top: 6px; padding-left: 10px; border-left: 1px solid var(--blue); font-size: 11px; color: var(--muted); font-style: italic; }
+.comment-compose { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 22px; background: var(--paper-2); border-top: 1px solid var(--line-soft); }
+.comment-compose textarea { width: 100%; background: var(--paper); border: 1px solid var(--line); padding: 10px 12px; font-family: inherit; font-size: 13px; color: var(--ink); outline: none; resize: none; min-height: 52px; }
+.comment-compose textarea:focus { border-color: var(--blue); }
+.cc-row { display: flex; justify-content: space-between; align-items: center; margin-top: 8px; font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+
+.authors-strip { display: grid; grid-template-columns: 1fr 120px 1fr; margin: 72px 0 32px; padding-top: 32px; border-top: 1px solid var(--line-soft); }
+.author-card { padding: 0 4px; }
+.author-card.right { text-align: right; }
+.author-card h4 { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 800; font-size: 22px; letter-spacing: -0.01em; color: var(--ink); margin: 16px 0 4px; }
+.author-card .loc { font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--blue); font-weight: 500; margin-bottom: 14px; }
+.author-card p { font-size: 13.5px; line-height: 1.65; color: var(--muted); margin: 0; max-width: 42ch; text-wrap: pretty; }
+.author-card.right p { margin-left: auto; }
+.author-portrait { width: 88px; height: 88px; background: var(--paper-3); position: relative; overflow: hidden; }
+.author-portrait::after { content: ""; position: absolute; inset: 0; background-image: repeating-linear-gradient(135deg, transparent 0 4px, rgba(10,14,26,.08) 4px 5px); }
+.author-card.right .author-portrait { margin-left: auto; }
+
+.footer { padding: 24px 36px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
+.footer-center { font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; color: var(--blue); }
+
+.mobile-shell { width: 100%; height: 100%; background: var(--paper); display: flex; flex-direction: column; overflow: hidden; position: relative; }
+.mobile-top { padding: 14px 18px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+.mobile-top .brand-mark { font-size: 15px; }
+.mobile-tabs { display: flex; border-bottom: 1px solid var(--line-soft); padding: 0 18px; }
+.mobile-tabs span { font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--muted); padding: 12px 0; margin-right: 20px; border-bottom: 1.5px solid transparent; }
+.mobile-tabs span.active { color: var(--blue); border-bottom-color: var(--blue); }
+.mobile-stream { flex: 1; overflow-y: auto; padding: 16px 18px 80px; }
+.mobile-msg { margin-bottom: 24px; }
+.mobile-msg.right { padding-left: 20px; border-left: 1.5px solid rgba(0,81,255,.2); }
+.mobile-msg.left { padding-right: 20px; border-right: 1.5px solid rgba(0,81,255,.2); text-align: right; }
+.mobile-msg.left .msg-meta { justify-content: flex-end; }
+.mobile-bottom { position: absolute; bottom: 0; left: 0; right: 0; padding: 12px 18px; background: var(--paper); border-top: 1px solid var(--line); display: flex; gap: 8px; }
+.mobile-bottom input { flex: 1; background: var(--paper-2); border: 1px solid var(--line); padding: 10px 12px; font-size: 13px; outline: none; }
+
+@keyframes dot-pulse { 0%,80%,100% { opacity: 0.2; transform: scale(1); } 40% { opacity: 1; transform: scale(1.4); } }
+
+.tw-panel { position: fixed; bottom: 20px; right: 20px; background: #fff; border: 1px solid var(--line); padding: 16px 18px; width: 260px; box-shadow: 0 8px 32px rgba(0,0,0,.12); z-index: 100; font-size: 12px; display: none; }
+.tw-panel.open { display: block; }
+.tw-panel h5 { margin: 0 0 14px; font-family: 'Archivo', sans-serif; font-stretch: 75%; font-weight: 700; font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); }
+.tw-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+.tw-swatches { display: flex; gap: 6px; }
+.tw-swatch { width: 20px; height: 20px; cursor: pointer; border: 1.5px solid transparent; }
+.tw-swatch.active { border-color: var(--ink); }
+.tw-toggle { width: 36px; height: 20px; background: var(--paper-2); border: none; position: relative; cursor: pointer; padding: 0; }
+.tw-toggle::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; background: #fff; transition: .15s; }
+.tw-toggle.on { background: var(--blue); }
+.tw-toggle.on::after { left: 18px; }
+.tw-seg { display: flex; border: 1px solid var(--line); }
+.tw-seg button { border: none; background: transparent; padding: 4px 10px; font-family: inherit; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer; color: var(--muted); }
+.tw-seg button.on { background: var(--blue); color: #fff; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<div class="tw-panel" id="tw-panel">
+  <h5>Tweaks</h5>
+  <div class="tw-row">
+    <label>View</label>
+    <div class="tw-seg" id="tw-view">
+      <button data-v="platform" class="on">Desktop</button>
+      <button data-v="mobile">Mobile</button>
+    </div>
+  </div>
+  <div class="tw-row">
+    <label>Synapse spine</label>
+    <button class="tw-toggle on" id="tw-spine"></button>
+  </div>
+  <div class="tw-row">
+    <label>Accent</label>
+    <div class="tw-swatches" id="tw-accent">
+      <div class="tw-swatch active" data-c="#0051FF" style="background:#0051FF"></div>
+      <div class="tw-swatch" data-c="#1E3A8A" style="background:#1E3A8A"></div>
+      <div class="tw-swatch" data-c="#0891B2" style="background:#0891B2"></div>
+      <div class="tw-swatch" data-c="#B8874A" style="background:#B8874A"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<script type="text/babel">
+const SV_DATA = {
+  sessionTitle: "Sobre o silêncio que pensa",
+  sessionNumber: "Encontro nº 14",
+  sessionDate: "21 · ABR · 2026",
+  sessionRuntime: "01:47:12",
+  messages: [
+    { side: "left", author: "Angélica Sátiro", time: "14:02", body: "Paulo, começo hoje com uma imagem que me persegue desde Barcelona: a de um pensamento que não quer ser dito. Não por timidez — por respeito. Há ideias que, ao serem nomeadas, perdem a transparência.", quote: null, likes: 48, echoes: 12 },
+    { side: "right", author: "Paulo Volker", time: "14:05", body: "Entendo a imagem, e ela me devolve outra. Estou olhando agora pela janela — o cerrado em abril é um exercício de contenção. Tudo espera. Mas essa espera não é ausência: é uma forma de discurso que ainda não escolheu as palavras.", quote: "A espera é uma forma de discurso que ainda não escolheu as palavras.", likes: 94, echoes: 31 },
+    { side: "left", author: "Angélica Sátiro", time: "14:11", body: "Sim — e aí mora nossa dificuldade contemporânea. Vivemos numa cultura que confundiu pensar com produzir enunciados. O silêncio virou falha técnica. Quando foi que esquecemos que a filosofia nasce da suspensão, não da resposta?", quote: null, likes: 67, echoes: 18 },
+    { side: "right", author: "Paulo Volker", time: "14:14", body: "Talvez quando trocamos a pergunta pelo algoritmo. A pergunta é lenta, imprecisa, desconfortável. O algoritmo é rápido, suave, e tem a gentileza falsa de quem nunca duvida.", quote: null, likes: 112, echoes: 44 },
+    { side: "left", author: "Angélica Sátiro", time: "14:19", body: "E no entanto — e aqui quero te provocar — não é o silêncio, em si, que pensa. É o espaço entre duas vozes atentas. Por isso estamos aqui, neste formato. A sinapse não é o neurônio; é o intervalo.", quote: "A sinapse não é o neurônio; é o intervalo.", likes: 203, echoes: 78 },
+    { side: "right", author: "Paulo Volker", time: "14:23", body: "Aceito a provocação. Então o que fazemos aqui não é diálogo — é cultivo de intervalos. Cada pausa entre nós é onde o pensamento, literalmente, acontece. Os ventos que dão nome a este encontro atravessam esses intervalos.", quote: null, likes: 156, echoes: 52 },
+    { side: "left", author: "Angélica Sátiro", time: "14:28", body: "Deixo então uma última imagem antes do intervalo: pensar é um ofício de jardineiro. Não se cultiva ideias; cultiva-se as condições para que elas cheguem. O resto é vento.", quote: null, likes: 88, echoes: 24 },
+  ],
+  comments: [
+    { name: "Marina Costa", initials: "MC", time: "há 2 min", body: "A imagem do cerrado como espera-discurso me desmontou. Vou sentar com isso.", ref: null },
+    { name: "João Pereira", initials: "JP", time: "há 4 min", body: "Essa noção do intervalo como lugar do pensamento dialoga muito com Blanchot. Alguém mais sentiu?", ref: "A sinapse não é o neurônio; é o intervalo." },
+    { name: "Helena Veloso", initials: "HV", time: "há 7 min", body: "Obrigada por trazerem de volta a lentidão à filosofia. Escutar daqui de Porto é um privilégio.", ref: null },
+    { name: "Rafael S.", initials: "RS", time: "há 11 min", body: "Pergunta para Paulo: o cerrado em abril entra nessa estética do esperar, ou é já uma forma de resposta?", ref: null },
+    { name: "Camila Dourado", initials: "CD", time: "há 14 min", body: "Estou tomando notas à mão — impossível não. O ritmo aqui pede papel.", ref: null },
+    { name: "Tomás Ribeiro", initials: "TR", time: "há 18 min", body: "O contraste Barcelona × Brasília não é geográfico, é temporal. Dois modos de habitar a espera.", ref: null },
+    { name: "Iris N.", initials: "IN", time: "há 22 min", body: "Primeira vez acompanhando. Não imaginei que um diálogo filosófico pudesse ter esta densidade.", ref: null },
+  ],
+};
+
+const { useState, useEffect, useRef } = React;
+
+function Synapse({ variant = "spine" }) {
+  if (variant === "spine") {
+    return (
+      <svg viewBox="0 0 120 1200" preserveAspectRatio="none" style={{ width: "100%", height: "100%", display: "block" }}>
+        <g stroke="var(--blue)" fill="none" strokeLinecap="round" opacity="0.55">
+          <path d="M 60 0 C 58 80, 64 140, 60 210 C 56 280, 66 340, 60 420 C 54 500, 66 560, 60 640 C 54 720, 64 780, 60 860 C 56 940, 66 1000, 60 1080 C 57 1140, 62 1180, 60 1200" strokeWidth="1" />
+          <path d="M 60 110 C 50 115, 35 118, 22 130" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 120 C 70 125, 86 130, 100 140" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 280 C 48 284, 30 288, 14 304" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 295 C 72 298, 90 304, 108 318" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 470 C 52 475, 40 482, 26 498" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 490 C 68 494, 82 500, 96 514" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 660 C 50 664, 34 670, 18 684" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 678 C 72 682, 90 688, 108 702" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 860 C 52 864, 40 870, 26 884" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 60 876 C 68 880, 84 886, 100 900" strokeWidth="0.7" opacity="0.6" />
+          <path d="M 22 130 C 18 134, 14 140, 10 148" strokeWidth="0.5" opacity="0.5" />
+          <path d="M 100 140 C 104 146, 108 150, 112 154" strokeWidth="0.5" opacity="0.5" />
+          <path d="M 14 304 C 10 308, 8 314, 6 320" strokeWidth="0.5" opacity="0.5" />
+          <path d="M 108 318 C 112 314, 114 310, 116 306" strokeWidth="0.5" opacity="0.5" />
+          <path d="M 26 498 C 22 502, 18 508, 14 516" strokeWidth="0.5" opacity="0.5" />
+          <path d="M 96 514 C 100 518, 104 522, 108 526" strokeWidth="0.5" opacity="0.5" />
+        </g>
+        <g fill="var(--blue)">
+          <circle cx="60" cy="210" r="2" opacity="0.6" />
+          <circle cx="60" cy="420" r="2" opacity="0.6" />
+          <circle cx="60" cy="640" r="2" opacity="0.6" />
+          <circle cx="60" cy="860" r="2" opacity="0.6" />
+          <circle cx="22" cy="130" r="1.4" opacity="0.5" />
+          <circle cx="100" cy="140" r="1.4" opacity="0.5" />
+          <circle cx="14" cy="304" r="1.4" opacity="0.5" />
+          <circle cx="108" cy="318" r="1.4" opacity="0.5" />
+          <circle cx="26" cy="498" r="1.4" opacity="0.5" />
+          <circle cx="96" cy="514" r="1.4" opacity="0.5" />
+        </g>
+      </svg>
+    );
+  }
+  if (variant === "corner") {
+    return (
+      <svg viewBox="0 0 80 80" style={{ width: 80, height: 80, display: "block" }}>
+        <g stroke="var(--blue)" fill="none" strokeLinecap="round" opacity="0.5">
+          <path d="M 0 40 C 10 40, 20 36, 30 30 C 40 24, 50 18, 60 12" strokeWidth="0.7" />
+          <path d="M 30 30 C 28 22, 24 16, 18 10" strokeWidth="0.5" opacity="0.7" />
+          <path d="M 45 21 C 50 18, 56 16, 62 16" strokeWidth="0.5" opacity="0.7" />
+          <path d="M 45 21 C 44 28, 42 34, 38 40" strokeWidth="0.5" opacity="0.7" />
+        </g>
+        <circle cx="30" cy="30" r="1.6" fill="var(--blue)" opacity="0.8" />
+        <circle cx="45" cy="21" r="1.2" fill="var(--blue)" opacity="0.6" />
+      </svg>
+    );
+  }
+  return null;
+}
+
+function Dot({ delay }) {
+  return <span style={{ width: 5, height: 5, borderRadius: "50%", background: "var(--blue)", opacity: 0.3, animation: `dot-pulse 1.4s ${delay}ms infinite` }} />;
+}
+
+function MessageBlock({ m, r, align, onReact }) {
+  return (
+    <div className={`msg ${align === "right" ? "right" : ""}`}>
+      <div className="msg-meta">
+        <span className="msg-author">{m.author}</span>
+        <span className="msg-time">{m.time}</span>
+      </div>
+      <div className="msg-body">{m.body}</div>
+      {m.quote && <div className="quote">"{m.quote}"</div>}
+      <div className="msg-reactions">
+        <span className={`reaction ${r.liked ? "active" : ""}`} onClick={() => onReact("liked")}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill={r.liked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.2">
+            <path d="M6 10.5 L2 6.5 C0.5 5, 1.5 2.5, 3.5 2.5 C4.5 2.5, 5.5 3, 6 4 C 6.5 3, 7.5 2.5, 8.5 2.5 C 10.5 2.5, 11.5 5, 10 6.5 Z" />
+          </svg>
+          <span className="reaction-count">{m.likes + (r.liked ? 1 : 0)}</span>
+          ressonar
+        </span>
+        <span className={`reaction ${r.echoed ? "active" : ""}`} onClick={() => onReact("echoed")}>
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.2">
+            <circle cx="6" cy="6" r="1.5" />
+            <circle cx="6" cy="6" r="3.5" />
+            <circle cx="6" cy="6" r="5.5" />
+          </svg>
+          <span className="reaction-count">{m.echoes + (r.echoed ? 1 : 0)}</span>
+          ecoar
+        </span>
+        <span className="reaction">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.2">
+            <path d="M2 3 L10 3 L10 8 L7 8 L5 10.5 L5 8 L2 8 Z" />
+          </svg>
+          citar
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function Platform({ tweaks }) {
+  const data = SV_DATA;
+  const [comments, setComments] = useState(data.comments);
+  const [reactions, setReactions] = useState({});
+  const [commentDraft, setCommentDraft] = useState("");
+
+  const showSpine = tweaks.spine !== false;
+  const accent = tweaks.accent || "#0051FF";
+
+  const toggleReaction = (i, kind) => setReactions(r => ({ ...r, [i]: { ...(r[i] || {}), [kind]: !(r[i] || {})[kind] } }));
+
+  const submitComment = (e) => {
+    e.preventDefault();
+    if (!commentDraft.trim()) return;
+    setComments([{ name: "Você", initials: "VC", time: "agora", body: commentDraft.trim(), ref: null }, ...comments]);
+    setCommentDraft("");
+  };
+
+  return (
+    <div className="shell" style={{ "--blue": accent }}>
+      <header className="topbar">
+        <div className="brand">
+          <div className="brand-mark">SINAPSES DOS VENTOS</div>
+          <div className="brand-sub">Plataforma de diálogo filosófico</div>
+        </div>
+        <nav className="nav">
+          <a className="active">Ao vivo</a>
+          <a>Arquivo</a>
+          <a>Autores</a>
+          <a>Sobre</a>
+        </nav>
+        <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
+          <span className="live-badge"><span className="live-dot" /> Transmitindo</span>
+          <button className="btn btn-ghost">Entrar</button>
+        </div>
+      </header>
+
+      <div className="session-bar">
+        <div className="session-left">
+          <div className="author-pill">
+            <div className="author-mono" />
+            <div>
+              <div className="author-name">Angélica Sátiro</div>
+              <div className="author-loc">Barcelona · 20:02 CET</div>
+            </div>
+          </div>
+        </div>
+        <div className="session-meta">
+          <div>{data.sessionNumber} · {data.sessionDate} · {data.sessionRuntime}</div>
+          <div className="session-title">{data.sessionTitle}</div>
+        </div>
+        <div className="session-right">
+          <div className="author-pill" style={{ flexDirection: "row-reverse" }}>
+            <div className="author-mono" />
+            <div style={{ textAlign: "right" }}>
+              <div className="author-name">Paulo Volker</div>
+              <div className="author-loc">Brasília · 15:02 BRT</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="main">
+        <section className="dialogue">
+          {showSpine && <div className="spine"><Synapse variant="spine" /></div>}
+
+          {data.messages.map((m, i) => {
+            const r = reactions[i] || {};
+            return (
+              <div key={i} className="row">
+                {m.side === "left" ? (
+                  <React.Fragment>
+                    <MessageBlock m={m} r={r} align="left" onReact={(k) => toggleReaction(i, k)} />
+                    <div className="connector"><span className={`node ${r.liked || r.echoed ? "filled" : ""}`} /></div>
+                    <div />
+                  </React.Fragment>
+                ) : (
+                  <React.Fragment>
+                    <div />
+                    <div className="connector"><span className={`node ${r.liked || r.echoed ? "filled" : ""}`} /></div>
+                    <MessageBlock m={m} r={r} align="right" onReact={(k) => toggleReaction(i, k)} />
+                  </React.Fragment>
+                )}
+              </div>
+            );
+          })}
+
+          <div className="row">
+            <div />
+            <div className="connector"><span className="node" /></div>
+            <div className="msg">
+              <div className="msg-meta">
+                <span className="msg-author">Paulo Volker</span>
+                <span className="msg-time">compondo…</span>
+              </div>
+              <div style={{ display: "flex", gap: 4, marginTop: 6 }}>
+                <Dot delay={0} /><Dot delay={200} /><Dot delay={400} />
+              </div>
+            </div>
+          </div>
+
+          <div className="authors-strip">
+            <div className="author-card">
+              <div className="author-portrait" />
+              <h4>Angélica Sátiro</h4>
+              <div className="loc">Filósofa · Barcelona</div>
+              <p>Doutora em Filosofia pela Universidade Autônoma de Barcelona. Fundadora do projeto Crearmundos. Autora de livros sobre pensamento criativo, filosofia para crianças e processos de transformação pela linguagem.</p>
+            </div>
+            <div className="connector" style={{ paddingTop: 44 }}><Synapse variant="corner" /></div>
+            <div className="author-card right">
+              <div className="author-portrait" />
+              <h4>Paulo Volker</h4>
+              <div className="loc">Brasília · Filósofo</div>
+              <p>Filósofo e ensaísta. Professor convidado em programas de pós-graduação no Brasil e na Europa. Pesquisa a relação entre silêncio, tempo e linguagem no pensamento contemporâneo. Vive em Brasília desde 2008.</p>
+            </div>
+          </div>
+        </section>
+
+        <aside className="comments">
+          <div className="comments-head">
+            <div className="comments-title">Comentários</div>
+            <div className="comments-count">{comments.length} · ao vivo</div>
+          </div>
+          <div className="comments-list">
+            {comments.map((c, i) => (
+              <div className="comment" key={i}>
+                <div className="comment-head">
+                  <div className="comment-avatar">{c.initials}</div>
+                  <div className="comment-name">{c.name}</div>
+                  <div className="comment-meta">{c.time}</div>
+                </div>
+                <div className="comment-body">{c.body}</div>
+                {c.ref && <div className="comment-ref">em resposta a: "{c.ref}"</div>}
+              </div>
+            ))}
+          </div>
+          <form className="comment-compose" onSubmit={submitComment}>
+            <textarea placeholder="Escrever um comentário… respeite os intervalos." value={commentDraft} onChange={(e) => setCommentDraft(e.target.value)} rows={2} />
+            <div className="cc-row">
+              <span>↵ para enviar</span>
+              <button type="submit" className="btn btn-primary" style={{ padding: "8px 16px" }}>Publicar</button>
+            </div>
+          </form>
+        </aside>
+      </div>
+
+      <footer className="footer">
+        <div>© 2026 · Sinapses dos Ventos</div>
+        <div className="footer-center">Um encontro contemplativo entre dois pensadores</div>
+        <div>Angélica Sátiro · Paulo Volker</div>
+      </footer>
+    </div>
+  );
+}
+
+function MobileShell() {
+  const data = SV_DATA;
+  return (
+    <div className="mobile-shell">
+      <div className="mobile-top">
+        <div className="brand-mark">SINAPSES DOS VENTOS</div>
+        <span className="live-badge" style={{ fontSize: 9, padding: "4px 8px" }}>
+          <span className="live-dot" /> Live
+        </span>
+      </div>
+      <div className="mobile-tabs">
+        <span className="active">Diálogo</span>
+        <span>Comentários · {data.comments.length}</span>
+        <span>Autores</span>
+      </div>
+      <div className="mobile-stream">
+        <div style={{ fontFamily: "'Archivo', sans-serif", fontStretch: "75%", fontWeight: 800, fontSize: 20, lineHeight: 1.1, marginBottom: 4 }}>{data.sessionTitle}</div>
+        <div style={{ fontSize: 10, letterSpacing: ".22em", textTransform: "uppercase", color: "var(--muted)", marginBottom: 24 }}>
+          {data.sessionNumber} · {data.sessionDate}
+        </div>
+        {data.messages.slice(0, 5).map((m, i) => (
+          <div key={i} className={`mobile-msg ${m.side}`}>
+            <div className="msg-meta">
+              <span className="msg-author">{m.author.split(" ")[0]}</span>
+              <span className="msg-time">{m.time}</span>
+            </div>
+            <div className="msg-body" style={{ fontSize: 13.5 }}>{m.body}</div>
+            {m.quote && <div className="quote" style={{ fontSize: 14, padding: "10px 12px", margin: "10px 0 4px" }}>"{m.quote}"</div>}
+          </div>
+        ))}
+      </div>
+      <div className="mobile-bottom">
+        <input placeholder="Comentar…" />
+        <button className="btn btn-primary" style={{ padding: "8px 14px" }}>Enviar</button>
+      </div>
+    </div>
+  );
+}
+
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "view": "platform",
+  "spine": true,
+  "accent": "#0051FF"
+}/*EDITMODE-END*/;
+
+function App() {
+  const [tweaks, setTweaks] = useState(TWEAK_DEFAULTS);
+
+  useEffect(() => {
+    const panel = document.getElementById('tw-panel');
+    const onMsg = (e) => {
+      if (!e.data || typeof e.data !== 'object') return;
+      if (e.data.type === '__activate_edit_mode') panel.classList.add('open');
+      if (e.data.type === '__deactivate_edit_mode') panel.classList.remove('open');
+    };
+    window.addEventListener('message', onMsg);
+    window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+
+    const update = (patch) => {
+      setTweaks(t => ({ ...t, ...patch }));
+      window.parent.postMessage({ type: '__edit_mode_set_keys', edits: patch }, '*');
+    };
+
+    document.querySelectorAll('#tw-view button').forEach(b => {
+      b.onclick = () => {
+        document.querySelectorAll('#tw-view button').forEach(x => x.classList.remove('on'));
+        b.classList.add('on');
+        update({ view: b.dataset.v });
+      };
+    });
+    const spineBtn = document.getElementById('tw-spine');
+    spineBtn.onclick = () => {
+      spineBtn.classList.toggle('on');
+      update({ spine: spineBtn.classList.contains('on') });
+    };
+    document.querySelectorAll('#tw-accent .tw-swatch').forEach(s => {
+      s.onclick = () => {
+        document.querySelectorAll('#tw-accent .tw-swatch').forEach(x => x.classList.remove('active'));
+        s.classList.add('active');
+        update({ accent: s.dataset.c });
+      };
+    });
+
+    return () => window.removeEventListener('message', onMsg);
+  }, []);
+
+  if (tweaks.view === "mobile") {
+    return (
+      <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", background: "#E4E1DB", padding: 40 }}>
+        <div style={{ width: 390, height: 780, background: "#ECEAE6", boxShadow: "0 20px 60px rgba(0,0,0,.18)", borderRadius: 38, overflow: "hidden", position: "relative", border: "8px solid #0A0E1A" }}>
+          <MobileShell />
+        </div>
+      </div>
+    );
+  }
+
+  return <Platform tweaks={tweaks} />;
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

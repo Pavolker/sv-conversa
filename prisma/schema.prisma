@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int         @id @default(autoincrement())
+  name          String
+  email         String      @unique
+  password      String
+  initials      String
+  bio           String?
+  location      String?
+  role          Role        @default(USER)
+  avatar        String?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  comments      Comment[]
+  messages      Message[]
+  reactions    Reaction[]
+  sessions     SessionAuthor[]
+}
+
+enum Role {
+  USER
+  AUTHOR
+  ADMIN
+}
+
+model Session {
+  id            Int         @id @default(autoincrement())
+  title         String
+  number       String
+  date         DateTime
+  runtime      String     @default("00:00:00")
+  isLive       Boolean    @default(false)
+  isArchived   Boolean    @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  authors       SessionAuthor[]
+  messages      Message[]
+  comments     Comment[]
+}
+
+model SessionAuthor {
+  id          Int     @id @default(autoincrement())
+  sessionId  Int
+  userId     Int
+  side       String
+  order      Int     @default(0)
+
+  session    Session @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user       User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([sessionId, userId])
+}
+
+model Message {
+  id          Int       @id @default(autoincrement())
+  sessionId  Int
+  userId    Int
+  side      String
+  body      String
+  quote     String?
+  time      String
+  likes     Int       @default(0)
+  echoes    Int       @default(0)
+  createdAt DateTime  @default(now())
+
+  session    Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  reactions  Reaction[]
+}
+
+model Comment {
+  id          Int       @id @default(autoincrement())
+  sessionId  Int
+  userId    Int
+  body      String
+  ref       String?
+  refId     Int?
+  createdAt DateTime  @default(now())
+
+  session    Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Reaction {
+  id          Int       @id @default(autoincrement())
+  messageId Int
+  userId    Int
+  type      ReactionType
+
+  message    Message   @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId, type])
+}
+
+enum ReactionType {
+  LIKED
+  ECHOED
+}

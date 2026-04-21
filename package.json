@@ -1,0 +1,21 @@
+{
+  "name": "sinapses-dos-ventos",
+  "version": "1.0.0",
+  "description": "Plataforma de diálogo filosófico",
+  "scripts": {
+    "dev": "node src/api/server.js",
+    "start": "node src/api/server.js",
+    "db:push": "npx prisma db push",
+    "db:generate": "npx prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.10.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.0",
+    "express": "^4.18.2",
+    "socket.io": "^4.7.4"
+  },
+  "devDependencies": {
+    "prisma": "^5.10.0"
+  }
+}
