@@ -1,29 +1,65 @@
-const SV_DATA = {
-  sessionTitle: "Sobre o silêncio que pensa",
-  sessionNumber: "Encontro nº 14",
-  sessionDate: "21 · ABR · 2026",
-  sessionRuntime: "01:47:12",
-  messages: [
-    { side: "left", author: "Angélica Sátiro", time: "14:02", body: "Paulo, começo hoje com uma imagem que me persegue desde Barcelona: a de um pensamento que não quer ser dito. Não por timidez — por respeito. Há ideias que, ao serem nomeadas, perdem a transparência.", quote: null, likes: 48, echoes: 12 },
-    { side: "right", author: "Paulo Volker", time: "14:05", body: "Entendo a imagem, e ela me devolve outra. Estou olhando agora pela janela — o cerrado em abril é um exercício de contenção. Tudo espera. Mas essa espera não é ausência: é uma forma de discurso que ainda não escolheu as palavras.", quote: "A espera é uma forma de discurso que ainda não escolheu as palavras.", likes: 94, echoes: 31 },
-    { side: "left", author: "Angélica Sátiro", time: "14:11", body: "Sim — e aí mora nossa dificuldade contemporânea. Vivemos numa cultura que confundiu pensar com produzir enunciados. O silêncio virou falha técnica. Quando foi que esquecemos que a filosofia nasce da suspensão, não da resposta?", quote: null, likes: 67, echoes: 18 },
-    { side: "right", author: "Paulo Volker", time: "14:14", body: "Talvez quando trocamos a pergunta pelo algoritmo. A pergunta é lenta, imprecisa, desconfortável. O algoritmo é rápido, suave, e tem a gentileza falsa de quem nunca duvida.", quote: null, likes: 112, echoes: 44 },
-    { side: "left", author: "Angélica Sátiro", time: "14:19", body: "E no entanto — e aqui quero te provocar — não é o silêncio, em si, que pensa. É o espaço entre duas vozes atentas. Por isso estamos aqui, neste formato. A sinapse não é o neurônio; é o intervalo.", quote: "A sinapse não é o neurônio; é o intervalo.", likes: 203, echoes: 78 },
-    { side: "right", author: "Paulo Volker", time: "14:23", body: "Aceito a provocação. Então o que fazemos aqui não é diálogo — é cultivo de intervalos. Cada pausa entre nós é onde o pensamento, literalmente, acontece. Os ventos que dão nome a este encontro atravessam esses intervalos.", quote: null, likes: 156, echoes: 52 },
-    { side: "left", author: "Angúsica Sátiro", time: "14:28", body: "Deixo então uma última imagem antes do intervalo: pensar é um ofício de jardineiro. Não se cultiva ideias; cultiva-se as condições para que elas cheguem. O resto é vento.", quote: null, likes: 88, echoes: 24 },
-  ],
-  comments: [
-    { name: "Marina Costa", initials: "MC", time: "há 2 min", body: "A imagem do cerrado como espera-discurso me desmontou. Vou sentar com isso.", ref: null },
-    { name: "João Pereira", initials: "JP", time: "há 4 min", body: "Essa noção do intervalo como lugar do pensamento dialoga muito com Blanchot. Alguém mais sentiu?", ref: "A sinapse não é o neurônio; é o intervalo." },
-    { name: "Helena Veloso", initials: "HV", time: "há 7 min", body: "Obrigada por trazerem de volta a lentidão à filosofia. Escutar daqui de Porto é um privilégio.", ref: null },
-    { name: "Rafael S.", initials: "RS", time: "há 11 min", body: "Pergunta para Paulo: o cerrado em abril entra nessa estética do esperar, ou é já uma forma de resposta?", ref: null },
-    { name: "Camila Dourado", initials: "CD", time: "há 14 min", body: "Estou tomando notas à mão — impossível não. O ritmo aqui pede papel.", ref: null },
-    { name: "Tomás Ribeiro", initials: "TR", time: "há 18 min", body: "O contraste Barcelona × Brasília não é geográfico, é temporal. Dois modos de habitar a espera.", ref: null },
-    { name: "Iris N.", initials: "IN", time: "há 22 min", body: "Primeira vez acompanhando. Não imaginei que um diálogo filosófico pudesse ter esta densidade.", ref: null },
-  ]
-};
+const API_URL = '/.netlify/functions';
 
-const API_URL = 'http://localhost:3000/api';
+let SV_DATA = null;
+let currentUser = { id: 1, name: 'Você', initials: 'VC', role: 'USER' };
+let sessionId = 1;
+let reactions = {};
+
+async function loadSession() {
+  try {
+    const res = await fetch(`${API_URL}/session`);
+    const session = await res.json();
+    
+    const date = new Date(session.date);
+    const day = date.getDate();
+    const months = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
+    const monthName = months[date.getMonth()];
+    
+    SV_DATA = {
+      sessionTitle: session.title,
+      sessionNumber: session.number,
+      sessionDate: `${day} · ${monthName} · ${date.getFullYear()}`,
+      sessionRuntime: session.runtime,
+      messages: session.messages.map(m => ({
+        side: m.side,
+        author: m.user.name,
+        time: m.time,
+        body: m.body,
+        quote: m.quote,
+        likes: m.likes,
+        echoes: m.echoes
+      })),
+      comments: session.comments.map(c => ({
+        name: c.user.name,
+        initials: c.user.initials,
+        time: 'agora',
+        body: c.body,
+        ref: c.ref
+      })),
+      authors: session.authors.map(a => ({
+        name: a.user.name,
+        location: a.user.location,
+        bio: a.user.bio,
+        side: a.side
+      }))
+    };
+  } catch (e) {
+    console.error('Erro ao carregar sessão:', e);
+    SV_DATA = getDefaultData();
+  }
+}
+
+function getDefaultData() {
+  return {
+    sessionTitle: "Sobre o silêncio que pensa",
+    sessionNumber: "Encontro nº 14",
+    sessionDate: "21 · ABR · 2026",
+    sessionRuntime: "01:47:12",
+    messages: [],
+    comments: [],
+    authors: []
+  };
+}
 let currentUser = { id: 1, name: 'Você', initials: 'VC', role: 'USER' };
 let sessionId = 1;
 let reactions = {};
@@ -414,9 +450,13 @@ function attachEventListeners() {
   }
 }
 
-function init() {
+async function init() {
   const root = $('#root');
   if (!root) return;
+
+  if (!SV_DATA) {
+    await loadSession();
+  }
 
   const isMobile = window.innerWidth < 800;
   
