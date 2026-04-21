@@ -1,7 +1,6 @@
-const { PrismaClient } = require('@prisma/client/edge');
-const { withAccelerate } = require('@prisma/extension-accelerate');
+const { PrismaClient } = require('@prisma/client');
 
-const prisma = new PrismaClient().$extends(withAccelerate());
+const prisma = new PrismaClient();
 
 exports.handler = async (event, context) => {
   const headers = {
