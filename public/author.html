@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Sinapses dos Ventos — Painel do Autor</title>
+<meta name="viewport" content="width=device-width" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,600;75..125,700;75..125,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0A0E1A;
+  --ink-2: #2A2F3D;
+  --muted: #6B6E78;
+  --paper: #ECEAE6;
+  --paper-2: #E4E1DB;
+  --blue: #0051FF;
+  --line: rgba(10,14,26,.12);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+}
+.container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+h1 { font-family: 'Archivo', sans-serif; font-weight: 800; color: var(--blue); margin-bottom: 8px; }
+.subtitle { color: var(--muted); font-size: 14px; margin-bottom: 32px; }
+
+.login-form { background: #fff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+.login-form h2 { margin: 0 0 20px; font-size: 16px; }
+.input { width: 100%; padding: 14px 16px; border: 1px solid var(--line); border-radius: 8px; font-size: 16px; margin-bottom: 16px; }
+.input:focus { outline: none; border-color: var(--blue); }
+.btn { width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; }
+.btn:hover { background: #0039B8; }
+
+.author-panel { display: none; }
+.author-panel.active { display: block; }
+.header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.logout { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 14px; }
+
+.msg-form { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,.08); margin-bottom: 24px; }
+.msg-form label { display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 8px; }
+.msg-form textarea { width: 100%; padding: 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 15px; font-family: inherit; min-height: 120px; resize: vertical; margin-bottom: 16px; }
+.msg-form textarea:focus { outline: none; border-color: var(--blue); }
+.quote-input { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.quote-input input[type="checkbox"] { width: 18px; height: 18px; }
+.quote-input input[type="text"] { flex: 1; padding: 10px 14px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; }
+
+.history { background: #fff; padding: 24px; border-radius: 12px; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+.history h3 { margin: 0 0 16px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.msg-item { padding: 16px; border-bottom: 1px solid var(--line); }
+.msg-item:last-child { border-bottom: none; }
+.msg-item .meta { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 12px; color: var(--muted); }
+.msg-item .body { font-size: 14px; line-height: 1.5; }
+.msg-item .quote { margin-top: 10px; padding: 10px 14px; border-left: 2px solid var(--blue); background: rgba(0,81,255,.03); font-size: 13px; font-style: italic; }
+
+.error { color: #dc2626; font-size: 14px; margin-top: 12px; text-align: center; }
+.success { color: #16a34a; font-size: 14px; margin-top: 12px; text-align: center; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Painel do Autor</h1>
+  <p class="subtitle">Sinapses dos Ventos — Envio de Mensagens</p>
+
+  <div class="login-form" id="loginForm">
+    <h2>Autenticação</h2>
+    <input type="email" class="input" id="email" placeholder="Email do autor" value="angelica@satiro.com">
+    <input type="password" class="input" id="password" placeholder="Senha" value="demo123">
+    <button class="btn" onclick="login()">Entrar</button>
+    <p class="error" id="loginError"></p>
+  </div>
+
+  <div class="author-panel" id="authorPanel">
+    <div class="header">
+      <span id="authorName"></span>
+      <button class="logout" onclick="logout()">Sair</button>
+    </div>
+
+    <div class="msg-form">
+      <label>Nova Mensagem</label>
+      <textarea id="msgBody" placeholder="Digite sua mensagem filosófica..."></textarea>
+      <div class="quote-input">
+        <input type="checkbox" id="hasQuote">
+        <input type="text" id="msgQuote" placeholder="Texto de citação (opcional)" disabled>
+      </div>
+      <button class="btn" onclick="sendMessage()">Enviar Mensagem</button>
+      <p class="success" id="sendSuccess"></p>
+      <p class="error" id="sendError"></p>
+    </div>
+
+    <div class="history">
+      <h3>Mensagens Recentes</h3>
+      <div id="messagesHistory"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const API_URL = '/.netlify/functions';
+let author = null;
+
+document.getElementById('hasQuote').addEventListener('change', function() {
+  document.getElementById('msgQuote').disabled = !this.checked;
+});
+
+async function login() {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  const errorEl = document.getElementById('loginError');
+  
+  try {
+    const res = await fetch(`${API_URL}/author-login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    
+    const data = await res.json();
+    
+    if (!res.ok) {
+      errorEl.textContent = data.error || 'Erro ao fazer login';
+      return;
+    }
+    
+    author = data;
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('authorPanel').classList.add('active');
+    document.getElementById('authorName').textContent = author.name;
+    loadMessages();
+  } catch (e) {
+    errorEl.textContent = 'Erro de conexão';
+  }
+}
+
+function logout() {
+  author = null;
+  document.getElementById('loginForm').style.display = 'block';
+  document.getElementById('authorPanel').classList.remove('active');
+}
+
+async function loadMessages() {
+  const res = await fetch(`${API_URL}/session`);
+  const session = await res.json();
+  
+  const myMessages = session.messages
+    .filter(m => m.userId === author?.id)
+    .slice(0, 10);
+  
+  const container = document.getElementById('messagesHistory');
+  container.innerHTML = myMessages.map(m => `
+    <div class="msg-item">
+      <div class="meta">
+        <span>${m.time}</span>
+        <span>${m.side === 'left' ? 'Esquerda' : 'Direita'}</span>
+      </div>
+      <div class="body">${m.body}</div>
+      ${m.quote ? `<div class="quote">"${m.quote}"</div>` : ''}
+    </div>
+  `).join('');
+  
+  if (myMessages.length === 0) {
+    container.innerHTML = '<p style="color:var(--muted);text-align:center">Nenhuma mensagem ainda</p>';
+  }
+}
+
+async function sendMessage() {
+  const body = document.getElementById('msgBody').value.trim();
+  const quote = document.getElementById('hasQuote').checked ? document.getElementById('msgQuote').value.trim() : null;
+  const successEl = document.getElementById('sendSuccess');
+  const errorEl = document.getElementById('sendError');
+  
+  if (!body) {
+    errorEl.textContent = 'Digite uma mensagem';
+    return;
+  }
+  
+  try {
+    const now = new Date();
+    const time = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    
+    const res = await fetch(`${API_URL}/message`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        sessionId: 1,
+        userId: author.id,
+        side: author.side || 'left',
+        body,
+        quote,
+        time
+      })
+    });
+    
+    if (!res.ok) {
+      const data = await res.json();
+      errorEl.textContent = data.error || 'Erro ao enviar';
+      return;
+    }
+    
+    document.getElementById('msgBody').value = '';
+    document.getElementById('msgQuote').value = '';
+    document.getElementById('hasQuote').checked = false;
+    document.getElementById('msgQuote').disabled = true;
+    successEl.textContent = 'Mensagem enviada com sucesso!';
+    errorEl.textContent = '';
+    
+    loadMessages();
+    setTimeout(() => successEl.textContent = '', 3000);
+  } catch (e) {
+    errorEl.textContent = 'Erro de conexão';
+  }
+}
+</script>
+</body>
+</html>
