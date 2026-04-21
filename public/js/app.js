@@ -65,9 +65,6 @@ function getDefaultData() {
     authors: []
   };
 }
-let currentUser = { id: 1, name: 'Você', initials: 'VC', role: 'USER' };
-let sessionId = 1;
-let reactions = {};
 
 function $(sel) {
   return document.querySelector(sel);
