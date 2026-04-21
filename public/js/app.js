@@ -1,7 +1,7 @@
 const API_URL = '/.netlify/functions';
 
 let SV_DATA = null;
-let currentUser = { id: 1, name: 'Você', initials: 'VC', role: 'USER' };
+let currentUser = { id: 5, name: 'Visitante', initials: 'VS', role: 'USER' };
 let sessionId = 1;
 let reactions = {};
 
@@ -404,16 +404,35 @@ function attachEventListeners() {
       const input = $('#comment-input');
       if (!input.value.trim()) return;
       
-      const newComment = {
-        name: currentUser.name,
-        initials: currentUser.initials,
-        time: 'agora',
-        body: input.value.trim(),
-        ref: null
-      };
-      
-      SV_DATA.comments.unshift(newComment);
+      const body = input.value.trim();
       input.value = '';
+      
+      try {
+        const res = await fetch(`${API_URL}/comment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: 1,
+            userId: currentUser.id,
+            body: body,
+            ref: null
+          })
+        });
+        
+        if (res.ok) {
+          const comment = await res.json();
+          SV_DATA.comments.unshift({
+            name: comment.user.name,
+            initials: comment.user.initials,
+            time: 'agora',
+            body: comment.body,
+            ref: comment.ref
+          });
+        }
+      } catch (e) {
+        console.error('Erro ao enviar comentário:', e);
+      }
+      
       renderComments(SV_DATA);
     });
   }
@@ -434,19 +453,38 @@ function attachEventListeners() {
   const mobileSubmit = $('#mobile-submit');
   const mobileInput = $('#mobile-input');
   if (mobileSubmit && mobileInput) {
-    mobileSubmit.addEventListener('click', () => {
+    mobileSubmit.addEventListener('click', async () => {
       if (!mobileInput.value.trim()) return;
       
-      const newComment = {
-        name: currentUser.name,
-        initials: currentUser.initials,
-        time: 'agora',
-        body: mobileInput.value.trim(),
-        ref: null
-      };
-      
-      SV_DATA.comments.unshift(newComment);
+      const body = mobileInput.value.trim();
       mobileInput.value = '';
+      
+      try {
+        const res = await fetch(`${API_URL}/comment`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sessionId: 1,
+            userId: currentUser.id,
+            body: body,
+            ref: null
+          })
+        });
+        
+        if (res.ok) {
+          const comment = await res.json();
+          SV_DATA.comments.unshift({
+            name: comment.user.name,
+            initials: comment.user.initials,
+            time: 'agora',
+            body: comment.body,
+            ref: comment.ref
+          });
+        }
+      } catch (e) {
+        console.error('Erro ao enviar comentário:', e);
+      }
+      
       renderMobileMessages(SV_DATA);
     });
   }
