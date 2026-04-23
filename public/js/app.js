@@ -179,7 +179,7 @@ function createPlatformShell() {
         <img class="author-mono" src="/images/angelica.jpg" alt="Angélica Sátiro">
         <div>
           <div class="author-name">Angélica Sátiro</div>
-          <div class="author-loc">Barcelona · 20:02 CET</div>
+          <div class="author-loc">Barcelona</div>
         </div>
       </div>
     </div>
@@ -192,7 +192,7 @@ function createPlatformShell() {
         <img class="author-mono" src="/images/paulo.png" alt="Paulo Volker">
         <div style="text-align:right">
           <div class="author-name">Paulo Volker</div>
-          <div class="author-loc">Brasília · 15:02 BRT</div>
+          <div class="author-loc">Brasília</div>
         </div>
       </div>
     </div>
