@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<title>Manual — Sinapses dos Ventos</title>
+<meta name="viewport" content="width=device-width" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400;75..125,500;75..125,600;75..125,700;75..125,800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+:root {
+  --ink: #0A0E1A;
+  --ink-2: #2A2F3D;
+  --muted: #6B6E78;
+  --paper: #ECEAE6;
+  --paper-2: #E4E1DB;
+  --blue: #0051FF;
+  --blue-deep: #0039B8;
+  --line: rgba(10,14,26,.12);
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  line-height: 1.7;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 36px;
+  border-bottom: 1px solid var(--line);
+  background: var(--paper);
+}
+.brand { display: flex; align-items: baseline; gap: 14px; }
+.brand-mark {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  color: var(--blue);
+}
+.nav { display: flex; gap: 28px; }
+.nav a {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.main { max-width: 720px; margin: 0 auto; padding: 48px 24px 100px; }
+
+h1 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 800;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+h2 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 700;
+  font-size: 22px;
+  margin: 48px 0 20px;
+  color: var(--blue);
+}
+h3 {
+  font-family: 'Archivo', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  margin: 32px 0 12px;
+}
+p { margin: 0 0 16px; color: var(--ink-2); }
+
+.intro {
+  font-size: 18px;
+  color: var(--ink);
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--line);
+}
+
+.step {
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  margin: 24px 0;
+  box-shadow: 0 2px 12px rgba(0,0,0,.04);
+}
+.step-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.step h3 { margin-top: 0; }
+
+.url-box {
+  background: var(--paper-2);
+  padding: 16px 20px;
+  border-radius: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--blue);
+  margin: 12px 0;
+  word-break: break-all;
+}
+
+.form-example {
+  background: var(--paper-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+}
+.form-example label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 8px;
+}
+.form-example textarea {
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  min-height: 100px;
+  resize: vertical;
+}
+.form-example .checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+.form-example input[type="text"] {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  font-size: 13px;
+  margin-top: 8px;
+}
+.btn-example {
+  display: inline-block;
+  padding: 12px 24px;
+  background: var(--blue);
+  color: #fff;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  margin-top: 16px;
+}
+
+.tip {
+  background: rgba(0,81,255,.04);
+  border-left: 3px solid var(--blue);
+  padding: 16px 20px;
+  margin: 20px 0;
+  border-radius: 0 8px 8px 0;
+}
+.tip-title {
+  font-weight: 600;
+  color: var(--blue);
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.problem {
+  background: var(--paper-2);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin: 12px 0;
+}
+.problem h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.problem p { margin: 0; font-size: 14px; }
+
+.summary {
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  margin: 40px 0;
+  box-shadow: 0 4px 24px rgba(0,0,0,.08);
+}
+.summary ol {
+  padding-left: 24px;
+}
+.summary li {
+  margin: 12px 0;
+  color: var(--ink-2);
+}
+
+.quote {
+  font-family: 'Archivo', sans-serif;
+  font-style: italic;
+  font-size: 18px;
+  color: var(--blue);
+  text-align: center;
+  padding: 32px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  margin: 48px 0;
+}
+
+.version {
+  text-align: center;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 60px;
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <a href="/" class="brand-mark">SINAPSES DOS VENTOS</a>
+  </div>
+  <nav class="nav">
+    <a href="/">Ver a plataforma</a>
+  </nav>
+</header>
+
+<main class="main">
+  <h1>Manual da Plataforma</h1>
+  <p class="intro">Um guia simples para Angélica Sátiro usar o Sinapses dos Ventos.</p>
+
+  <h2>O que é esta plataforma?</h2>
+  <p>Esta é a página onde acontece o <strong>Sinapses dos Ventos</strong> — as nossas conversas filosóficas ao vivo.</p>
+  <p>Pense nela como um caderno de notas digital bonito, onde:</p>
+  <ul>
+    <li>As nossas mensagens aparecem no centro da tela</li>
+    <li>As pessoas podem assistir e deixar comentários na lateral</li>
+    <li>Tudo fica guardado para quem quiser ler depois</li>
+  </ul>
+  <p><strong>Você não precisa entender de tecnologia</strong> para usar. Este manual explica tudo passo a passo.</p>
+
+  <h2>Como chegar ao painel de envio</h2>
+
+  <div class="step">
+    <div class="step-number">1</div>
+    <h3>Abrir a página</h3>
+    <p>Abra o navegador (Chrome, Safari, Firefox) e digite:</p>
+    <div class="url-box">sinapses-vento.netlify.app/author</div>
+  </div>
+
+  <div class="step">
+    <div class="step-number">2</div>
+    <h3>Fazer login</h3>
+    <p>Você vai ver uma tela de login.</p>
+    <ul>
+      <li>O email já está preenchido: <strong>angelsatiro@gmail.com</strong></li>
+      <li>Digite a senha: <strong>angelicasatiro</strong></li>
+      <li>Clique no botão <strong>Entrar</strong></li>
+    </ul>
+  </div>
+
+  <div class="step">
+    <div class="step-number">3</div>
+    <h3>Verificar se entrou</h3>
+    <p>Depois de clicar, a tela muda. Você deve ver seu nome no canto superior direito e um botão <strong>Sair</strong> do lado.</p>
+    <p>Se aparecer uma mensagem de erro, verifique se digitou a senha corretamente.</p>
+  </div>
+
+  <h2>Como enviar uma mensagem</h2>
+
+  <div class="tip">
+    <div class="tip-title">💡 Dica importante: escreva primeiro no bloco de notas</div>
+    <p>A mensagem que você escreve aqui vai aparecer <strong>imediatamente</strong> na tela principal, para todos verem.</p>
+    <p>Por isso, antes de digitar aqui, <strong>escreva sua reflexão num bloco de notas do computador</strong>, releia, ajuste, e depois copie e cole aqui.</p>
+  </div>
+
+  <h3>Escrevendo a mensagem</h3>
+
+  <div class="form-example">
+    <label>Digite sua mensagem filosófica...</label>
+    <textarea placeholder="Escreva aqui sua reflexão...">O silêncio não é ausência. É uma forma de presença que ainda não encontrou palavras.</textarea>
+    
+    <div class="checkbox-row">
+      <input type="checkbox" checked>
+      <span style="font-size:13px">Adicionar citação destacada</span>
+    </div>
+    <input type="text" placeholder="Digite o texto da citação..." value="O silêncio é uma forma de presença que ainda não encontrou palavras.">
+    
+    <div class="btn-example">Enviar Mensagem</div>
+  </div>
+
+  <h3>O que acontece depois de enviar?</h3>
+  <ol>
+    <li>Sua mensagem aparece <strong>imediatamente</strong> na página principal</li>
+    <li>Ela fica visível para todos os espectadores</li>
+    <li>As pessoas podem reagir (dar "like", "ecoar")</li>
+    <li>Os comentários aparecem na lateral</li>
+  </ol>
+
+  <h2>Problemas comuns e soluções</h2>
+
+  <div class="problem">
+    <h4>🔑 Esqueci minha senha</h4>
+    <p>Entre em contato com Paulo para redefinir.</p>
+  </div>
+
+  <div class="problem">
+    <h4>😅 Mandei a mensagem errada</h4>
+    <p>Mensagens enviadas não podem ser apagadas. Por isso, <strong>escreva primeiro no bloco de notas</strong> e depois copie e cole aqui.</p>
+  </div>
+
+  <div class="problem">
+    <h4>📄 A página ficou branca</h4>
+    <p>Atualize a página (clique F5 ou no botão de atualizar do navegador).</p>
+  </div>
+
+  <div class="problem">
+    <h4>⏳ Não consigo ver as mensagens</h4>
+    <p>Aguarde 30 segundos. Às vezes o site demora para carregar.</p>
+  </div>
+
+  <div class="summary">
+    <h3>Resumo: passo a passo rápido</h3>
+    <ol>
+      <li>Abra: <code>sinapses-vento.netlify.app/author</code></li>
+      <li>Faça login (email e senha)</li>
+      <li>Escreva sua reflexão no bloco de notas primeiro</li>
+      <li>Copie e cole na caixa de mensagem</li>
+      <li>Se quiser, adicione uma citação</li>
+      <li>Clique em <strong>Enviar Mensagem</strong></li>
+    </ol>
+  </div>
+
+  <h2>Dicas importantes</h2>
+
+  <h3>Sobre o formato</h3>
+  <ul>
+    <li>Suas mensagens aparecem à <strong>esquerda</strong> da tela</li>
+    <li>As de Paulo aparecem à <strong>direita</strong></li>
+    <li>Não precisa se preocupar com isso — o sistema organiza automaticamente</li>
+  </ul>
+
+  <h3>Sobre o ritmo</h3>
+  <ul>
+    <li><strong>Não tenha pressa</strong> em responder</li>
+    <li>O silêncio faz parte da conversa</li>
+    <li>Você pode pensar bastante antes de escrever</li>
+  </ul>
+
+  <h3>Sobre os espectadores</h3>
+  <ul>
+    <li>As pessoas estão <strong>assistindo em tempo real</strong></li>
+    <li>Seus comentários vão aparecer para todos</li>
+    <li>Respire fundo antes de enviar</li>
+  </ul>
+
+  <div class="quote">
+    "Cultivar as condições para que o pensamento chegue — o resto é vento."
+  </div>
+
+  <p style="text-align:center; margin-top:40px;">
+    <a href="sinapses-vento.netlify.app/author" class="btn-example" style="text-decoration:none;">
+      Ir para o painel de envio →
+    </a>
+  </p>
+
+  <div class="version">
+    Versão 1.0 — Abril 2026<br>
+    Plataforma Sinapses dos Ventos
+  </div>
+</main>
+</body>
+</html>
