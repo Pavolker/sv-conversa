@@ -170,7 +170,6 @@ function createPlatformShell() {
     </nav>
     <div style="display:flex;gap:14px;align-items:center">
       <span class="live-badge"><span class="live-dot"></span> Transmitindo</span>
-      <button class="btn btn-ghost">Entrar</button>
     </div>
   </header>
 
