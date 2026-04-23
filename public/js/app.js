@@ -19,11 +19,16 @@ async function loadSession() {
     const months = ['JAN','FEV','MAR','ABR','MAI','JUN','JUL','AGO','SET','OUT','NOV','DEZ'];
     const monthName = months[date.getMonth()];
     
+    const sessionStartTime = session.startTime ? new Date(session.startTime) : date;
+    const isLive = session.isLive;
+    
     SV_DATA = {
       sessionTitle: session.title,
       sessionNumber: session.number,
       sessionDate: `${day} · ${monthName} · ${date.getFullYear()}`,
       sessionRuntime: session.runtime,
+      sessionStartTime: sessionStartTime,
+      isLive: isLive,
       messages: session.messages.map(m => ({
         side: m.side,
         author: m.user.name,
@@ -59,11 +64,31 @@ function getDefaultData() {
     sessionTitle: "Sobre o silêncio que pensa",
     sessionNumber: "Encontro nº 14",
     sessionDate: "21 · ABR · 2026",
-    sessionRuntime: "01:47:12",
+    sessionRuntime: "00:00:00",
+    sessionStartTime: new Date(),
+    isLive: true,
     messages: [],
     comments: [],
     authors: []
   };
+}
+
+function formatRuntime(startTime) {
+  const now = new Date();
+  const diff = Math.floor((now - startTime) / 1000);
+  const hours = Math.floor(diff / 3600);
+  const minutes = Math.floor((diff % 3600) / 60);
+  const seconds = diff % 60;
+  return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
+
+function updateRuntime() {
+  if (!SV_DATA || !SV_DATA.sessionStartTime || !SV_DATA.isLive) return;
+  
+  const runtimeEl = $('#session-runtime');
+  if (runtimeEl) {
+    runtimeEl.textContent = formatRuntime(SV_DATA.sessionStartTime);
+  }
 }
 
 function $(sel) {
@@ -160,7 +185,7 @@ function createPlatformShell() {
       </div>
     </div>
     <div class="session-meta">
-      <div>${SV_DATA.sessionNumber} · ${SV_DATA.sessionDate} · ${SV_DATA.sessionRuntime}</div>
+      <div id="session-runtime">${SV_DATA.sessionRuntime}</div>
       <div class="session-title">${SV_DATA.sessionTitle}</div>
     </div>
     <div class="session-right">
@@ -536,6 +561,11 @@ async function init() {
         window.location.href = '/sobre.html';
       }
     });
+  });
+
+  // Atualizar runtime a cada segundo
+  if (SV_DATA.isLive) {
+    setInterval(updateRuntime, 1000);
   });
 }
 
