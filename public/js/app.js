@@ -566,7 +566,7 @@ async function init() {
   // Atualizar runtime a cada segundo
   if (SV_DATA.isLive) {
     setInterval(updateRuntime, 1000);
-  });
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
